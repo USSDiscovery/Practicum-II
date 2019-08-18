@@ -175,3 +175,23 @@ The following are a few illustrations of this dataset:
 ### Average Scoring Offense - Average Scoring Defense - Field Goal Percentage - Three Point Field Goal Percentage
 
 ![alt tag](Images/Division-Measures.png "Average Scoring Offense - Average Scoring Defense - Field Goal Percentage - Three Point Field Goal Percentage")
+
+The above illustrates the divisions are fairly evenly measured with Division 2 having a slight edge.
+
+The following focuses on Division 1:
+
+This illustrates the Division 1 Top Ten Teams by Wins for the 2018-2019 season. Note Virginia did win the championship that year.
+
+![alt tag](Images/Division-I-Top-Ten-Teams-by-Wins.png "Division 1 Top Ten Teams by Wins")
+
+This illustrates the Division 1 Top Ten Teams by Score for the 2018-2019 season. Note, even though Virginia won the championship that year, they were not in the top 10 in scoring. Scoring alone does not determine a team's success.
+
+![alt tag](Images/Division-I-Top-Ten-Teams-by-Score.png "Division 1 Top Ten Teams by Score")
+
+This illustrates the Division 1 Top Ten Teams by Scoring Defense for the 2018-2019 season. This measures the teams that allowed the fewest points to be scored against them through the course of the season. Virginia shows up as the number 1 team on this list. Scoring Defense may be a heavy contributor to a model build.
+
+![alt tag](Images/Division-I-Top-Ten-Teams-by-Scoring-Defense.png "Division 1 Top Ten Teams by Scoring Defense")
+
+This next graphic brings the above attributes together.
+
+![alt tag](Images/Division-I-Team-Results-Team-Scoring-Team-Scoring-Defense.png "Division 1 Team Results - Team Scoring - Team Scoring Defense")
