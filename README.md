@@ -17,4 +17,4 @@ The above is an oversimplification of the game as a team is made up of approxima
 
 All data has been gathered from the NCAA Men's Basketball Archived Statistics website
 
-![alt tag](Images\Basketball-Archived-Statistics.png "Basketball Archived Statistics")
+![alt tag](Images/Basketball-Archived-Statistics.png "Basketball Archived Statistics")
