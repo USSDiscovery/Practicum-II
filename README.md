@@ -178,7 +178,7 @@ The following are a few illustrations of this dataset:
 
 The above illustrates the divisions are fairly evenly measured with Division 2 having a slight edge.
 
-The following focuses on Division 1:
+### The following focuses on Division 1 Teams:
 
 This illustrates the Division 1 Top Ten Teams by Wins for the 2018-2019 season. Note Virginia did win the championship that year.
 
@@ -195,3 +195,5 @@ This illustrates the Division 1 Top Ten Teams by Scoring Defense for the 2018-20
 This next graphic brings the above attributes together.
 
 ![alt tag](Images/Division-I-Team-Results-Team-Scoring-Team-Scoring-Defense.png "Division 1 Team Results - Team Scoring - Team Scoring Defense")
+
+### The following focuses on Division 1 Players:
