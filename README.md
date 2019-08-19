@@ -33,7 +33,7 @@ There are 3 divisions in Men's NCAA Basketball. These divisions and there respec
 
 ![alt tag](Images/Division-III.png "Division 3")
 
-The initial thought was to simply download the needed statistics from the NCAA Statistics website. However, upon further investigation, it was determined that this would not yield a statistical dataset rich enough with predictors. As a result, Python along with the BeautifulSoup library is used to scrape the website. Scraping the website allows for the collection of a dataset rich with predictors. It also allows for the data to be cleansed as it is collected and in a preferable, comma-separated format. While coding was like programming your way through 'soup', the BeautifulSoup library did assist with data extraction from a nested HTML data structure. The data extraction is broken down into Team Statistics, Team Results, and Player Statistics.
+The initial thought was to simply download the needed statistics from the NCAA Statistics website. However, upon further investigation, it was determined that this would not yield a statistical dataset rich enough with predictors. As a result, Python along with the BeautifulSoup library is used to scrape the website. Scraping the website allows for the collection of a dataset rich with predictors. It also allows for the data to be cleansed as it is collected and in a preferable, comma-separated format. While coding was like programming your way through 'soup', the BeautifulSoup library did assist with data extraction from a nested HTML data structure. The data extraction is broken down into Team Statistics, Team Results, and Player Statistics. One important note to point out is that the dataset is naturally balanced. That is, there will be an equal number of wins to losses. Put another way, for every team that wins there will be a team that losses.
 
 ### Team statistics
 
@@ -197,3 +197,43 @@ This next graphic brings the above attributes together.
 ![alt tag](Images/Division-I-Team-Results-Team-Scoring-Team-Scoring-Defense.png "Division 1 Team Results - Team Scoring - Team Scoring Defense")
 
 ### The following focuses on Division 1 Players:
+
+The average height at the positions of guard, forward, and center are comparable across divisions.
+
+![alt tag](Images/Average-Height-by-Division-Position.png "Average Height by Division Position")
+
+The average height is compared to field goals made. As the number of field goals go up, the average height goes down.
+
+![alt tag](Images/Average-Height-Field-Goals-by-Division-Position.png "Average Height Field Goals by Division Position")
+
+The following graphic illustrates the number of field goals attempted against the number of field goals made. The more you take. The more you make.
+
+![alt tag](Images/Division-I-Player-Field-Goals-by-Team.png "Division 1 Player Field Goals by Team")
+
+The above graphics are only a fraction of what tells the picture of a basketball game. With so many statistics represented within the dataset and so many more that could be represented, it is difficult to get a clear picture of what contributes to a win or a loss. Modeling the data is a step that can bring us closer to that answer.
+
+#### Data Modeling - Decision Trees
+
+Decision Trees are a way of coming to a decision by divide and conquer until a class is met. For example, if a team's field goal percentage is greater than 50% go one way, if it is not go the other way. At the next tree node the split may be decided on a different attribute. For example, if player 5 has a free throw percentage less then 50% go one way, if not, go the other way.
+
+The initial dataset being used is a 247,933 record set with 965 variables per record and 1 label per record. The following is a snapshot of this dataset. Note, this dataset has not been normalized.
+
+![alt tag](Images/Dataset.png "Dataset")
+
+The following is the 10-fold cross-validated Decision Tree build. Note the top Accuracy achieved was 74% with a moderate Kappa of 0.485. With a perfectly balanced dataset of a label of win or loss, it becomes important that a model based on chance is ruled out. A Kappa of approximately 0.5 helps to rule out a 74% Accuracy of chance. Note it took 95 minutes to build this decision tree model.
+
+![alt tag](Images/Decision-Tree-Train-90.png "Decision Tree 90% Training Dataset")
+
+The below graphic illustrates the resultant Decision Tree. Note the top node splits on the opposition win/loss percentage:
+
+![alt tag](Images/Decision-Tree.png "Decision Tree")
+
+The following illustrates the confusion matrix of the above decision tree. If it were more important to predict a win or a loss, the Sensitivity and Specificity statistics would come into play. These statistics are fairly even at 73% and 75% respectively where a loss is predicted correctly 73% of the time and a win is predicted correctly 75% of the time. Note the dataset is labeled where a win is 0 and a loss is 1.
+
+![alt tag](Images/Decision-Tree-Confusion-Matrix.png "Decision Tree Confusion Matrix")
+
+
+
+# Normalized dataset
+
+The following is a snapshot of this dataset after normalization. Normalizing a dataset is a way of making sure no one attribute overpowers another during model build.
