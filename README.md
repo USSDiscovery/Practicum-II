@@ -220,7 +220,7 @@ The initial dataset being used is a 247,933 record set with 965 variables per re
 
 ![alt tag](Images/Dataset.png "Dataset")
 
-The following is the 10-fold cross-validated Decision Tree build. Note the top Accuracy achieved was 74% with a moderate Kappa of 0.485. With a perfectly balanced dataset of a label of win or loss, it becomes important that a model based on chance is ruled out. A Kappa of approximately 0.5 helps to rule out a 74% Accuracy of chance. Note it took 95 minutes to build this decision tree model.
+The following is the 10-fold cross-validated Decision Tree build. Note the top Accuracy achieved was 74% with a moderate Kappa of 0.485. With a perfectly balanced dataset of a label of win or loss, it becomes important that a model based on chance is ruled out. A Kappa of approximately 0.5 helps to rule out a 74% Accuracy of chance. Note it took 95 minutes to build this decision tree model on an AWS EC2 virtual instance with 64GB of ram. The building of this model took just over half of the 64GB of ram to build. Even though the EC2 instance had 4 CPU, only 1 CPU was used at 100% utilization. By default, R uses only one CPU although there are ways to parallelize model builds.
 
 ![alt tag](Images/Decision-Tree-Train-90.png "Decision Tree 90% Training Dataset")
 
@@ -232,8 +232,34 @@ The following illustrates the confusion matrix of the above decision tree. If it
 
 ![alt tag](Images/Decision-Tree-Confusion-Matrix.png "Decision Tree Confusion Matrix")
 
+Building other models with 965 predictors may become problematic. The decision tree model took 95 minutes to build. The next step analyzes which predictors were the most important in building the decision tree. In order to determine the most important variables, the 'varimp' function is used.
 
+![alt tag](Images/Decision-Tree-Variable-Importance.png "Decision Tree Variable Importance")
 
-# Normalized dataset
+Much preparation went into getting to this point. 965 predictors were collected yet, based on decision tree, only 16 were important. The key statistics of the game are all covered in the top 16 predictors. One predictor that stands out is the 'OPP_GAMES_PLAYED_05'. This is the number of games the opposing team's 5th ranked (by field goals) player played. Of the 15 players, representing each team, this player was singled out as being important to the model.
 
-The following is a snapshot of this dataset after normalization. Normalizing a dataset is a way of making sure no one attribute overpowers another during model build.
+#### Data Modeling - Decision Trees - Normalized Dataset
+
+The following is a snapshot of this dataset after normalization. Normalizing a dataset is a way of making sure no one attribute overpowers another during model build. Interestingly, the decision tree build, based on a normalized dataset yielded the same results.
+
+#### Data Modeling - Random Forest
+
+Next a Random Forest model is built, based on the 16 most important attributes outlined above. The purpose of Random Forest is to randomly select different attributes on which to split. These individual trees are then combined to form one 'majority' answer.
+
+#### Data Modeling - K Nearest Neighbors
+
+KNN is a way of measuring the distance between an unlabeled object and labeled objects. The majority vote of the closest K objects that are labeled to an unlabeled object wins. For example, if out of the 10 closest labeled objects to an unlabeled object, 7 are wins and 3 are losses, the unlabeled object will be labeled as a win. Note, in the case of this dataset, the winning team's statistics and the losing team's statistics are all represented on the same record. The win or loss label is with respect to the 'team' on the record, not the 'opposing team'.
+
+#### Support Vector Machines
+
+Support Vector Machines attempt to separate data points using n-dimensional space. By separating data points, majority rule can take place. For example, if based on attributes, records can be separated, a group can be classified by its majority label.
+
+#### Artificial Neural Networks
+
+Artificial Neural Networks determine how much an attribute or combination of attributes contribute to a class. ANNs are resource intensive. The 16 most important attributes were used. This limited dataset may have contributed to the lack of accuracy of this model. With 16 attributes and a 223,141 record training dataset, the model took approximately 6.7 hours to build. It would be interesting to see if adding additional attributes will increase the accuracy of this model.
+
+![alt tag](Images/ANN-1-Hidden-Layer.png "Artificial Neural Network with One Hidden Layer")
+
+![alt tag](Images/ANN-1-Hidden-Layer-Result.png "Artificial Neural Network with One Hidden Layer Result")
+
+![alt tag](Images/ANN-1-Hidden-Layer-Graphic.png "Artificial Neural Network with One Hidden Layer Graph")
