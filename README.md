@@ -234,6 +234,11 @@ The following illustrates the confusion matrix of the above decision tree. If it
 
 Building other models with 965 predictors may become problematic. The decision tree model took 95 minutes to build. The next step analyzes which predictors were the most important in building the decision tree. In order to determine the most important variables, the 'varimp' function is used.
 
+1. Accuracy = 0.7448
+2. Kappa = 0.4895
+3. Sensitivity = 0.7362
+4. Specificity = 0.7534
+
 ![alt tag](Images/Decision-Tree-Variable-Importance.png "Decision Tree Variable Importance")
 
 Much preparation went into getting to this point. 965 predictors were collected yet, based on decision tree, only 16 were important. The key statistics of the game are all covered in the top 16 predictors. One predictor that stands out is the 'OPP_GAMES_PLAYED_05'. This is the number of games the opposing team's 5th ranked (by field goals) player played. Of the 15 players, representing each team, this player was singled out as being important to the model.
@@ -258,6 +263,25 @@ The following is a correlation matrix of the 16 most important attributes. Note 
 
 ![alt tag](Images/Dataset-Correlation-Graph.png "Dataset Correlation Graph")
 
+The following is the decision tree after having removed all 'Rank' columns.
+
+![alt tag](Images/Decision-Tree-Rank-Column-Removal.png "Decision Tree Rank Column Removal")
+
+Note the Accuracy and Kappa values, after cross-validation, are almost the same.
+
+![alt tag](Images/Decision-Tree-Confusion-Matrix-Normalized-Less-Rank.png "Decision Tree Confusion Matrix without Rank Columns")
+
+A new variable importance yields the following top 20 most important variables. Thes top 20 variables will be used for future models.
+
+![alt tag](Images/Decision-Tree-Variable-Importance-Normalized-Less-Rank.png "Decision Tree Variable Importance")
+
+![alt tag](Images/Decision-Tree-Normalized-Less-Rank.png "Decision Tree")
+
+1. Accuracy = 0.7432
+2. Kappa = 0.4864
+3. Sensitivity = 0.7533
+4. Specificity = 0.7331
+
 #### Data Modeling - Random Forest
 
 Next a Random Forest model is built, based on the 16 most important attributes outlined above. The purpose of Random Forest is to randomly select different attributes on which to split. These individual trees are then combined to form one 'majority' answer.
@@ -269,6 +293,15 @@ KNN is a way of measuring the distance between an unlabeled object and labeled o
 #### Support Vector Machines
 
 Support Vector Machines attempt to separate data points using n-dimensional space. By separating data points, majority rule can take place. For example, if based on attributes, records can be separated, a group can be classified by its majority label.
+
+After running SVM on the 20 most important variables, as computed by the Decision Tree model, the results follow. Note, the statistical values of Accuracy, Kappa, Sensitivity, and Specificity all fall in line with that of Decision Tree.
+
+1. Accuracy = 0.7624
+2. Kappa = 0.5248
+3. Sensitivity = 0.7637
+4. Specificity = 0.7610
+
+![alt tag](Images/SVM-Confusion-Matrix.png "Support Vector Machine Confusion Matrix")
 
 #### Artificial Neural Networks
 
