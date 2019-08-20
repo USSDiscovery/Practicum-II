@@ -242,6 +242,22 @@ Much preparation went into getting to this point. 965 predictors were collected 
 
 The following is a snapshot of this dataset after normalization. Normalizing a dataset is a way of making sure no one attribute overpowers another during model build. Interestingly, the decision tree build, based on a normalized dataset yielded the same results.
 
+![alt tag](Images/Dataset-Normalized.png "Dataset Normalized")
+
+![alt tag](Images/Decision-Tree-Train-90-Normalized.png "Decision Tree 90% Training Dataset Normalized")
+
+![alt tag](Images/Decision-Tree-Variable-Importance-Normalized.png "Decision Tree Variable Importance Normalized")
+
+![alt tag](Images/Decision-Tree-Normalized.png "Decision Tree Normalized")
+
+![alt tag](Images/Decision-Tree-Confusion-Matrix-Normalized.png "Decision Tree Confusion Matrix Normalized")
+
+The following is a correlation matrix of the 16 most important attributes. Note how the Win/Loss percentage value is negatively correlated to the Win/Loss percentage rank. As teams win more games their numerical rank becomes less. There are a number of highly correlated Value/Rank combinations and Rank/Rank combinations. Removing all Rank attributes may improve the model.
+
+![alt tag](Images/Dataset-Correlation.png "Dataset Correlation")
+
+![alt tag](Images/Dataset-Correlation-Graph.png "Dataset Correlation Graph")
+
 #### Data Modeling - Random Forest
 
 Next a Random Forest model is built, based on the 16 most important attributes outlined above. The purpose of Random Forest is to randomly select different attributes on which to split. These individual trees are then combined to form one 'majority' answer.
