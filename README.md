@@ -232,12 +232,12 @@ The following illustrates the confusion matrix of the above decision tree. If it
 
 ![alt tag](Images/Decision-Tree-Confusion-Matrix.png "Decision Tree Confusion Matrix")
 
-Building other models with 965 predictors may become problematic. The decision tree model took 95 minutes to build. The next step analyzes which predictors were the most important in building the decision tree. In order to determine the most important variables, the 'varimp' function is used.
-
 1. Accuracy = 0.7448
 2. Kappa = 0.4895
 3. Sensitivity = 0.7362
 4. Specificity = 0.7534
+
+Building other models with 965 predictors may become problematic. The decision tree model took 95 minutes to build. The next step analyzes which predictors were the most important in building the decision tree. In order to determine the most important variables, the 'varimp' function is used.
 
 ![alt tag](Images/Decision-Tree-Variable-Importance.png "Decision Tree Variable Importance")
 
@@ -245,7 +245,7 @@ Much preparation went into getting to this point. 965 predictors were collected 
 
 #### Data Modeling - Decision Trees - Normalized Dataset
 
-The following is a snapshot of this dataset after normalization. Normalizing a dataset is a way of making sure no one attribute overpowers another during model build. Interestingly, the decision tree build, based on a normalized dataset yielded the same results.
+The following is a snapshot of this dataset after normalization. Normalizing a dataset is a way of making sure no one attribute overpowers another during model build. Interestingly, the decision tree build, based on a normalized dataset yielded the same results for Decision Tree, Accuracy, Kappa, Sensitivity, and Specificity.
 
 ![alt tag](Images/Dataset-Normalized.png "Dataset Normalized")
 
@@ -257,6 +257,11 @@ The following is a snapshot of this dataset after normalization. Normalizing a d
 
 ![alt tag](Images/Decision-Tree-Confusion-Matrix-Normalized.png "Decision Tree Confusion Matrix Normalized")
 
+1. Accuracy = 0.7448
+2. Kappa = 0.4895
+3. Sensitivity = 0.7362
+4. Specificity = 0.7534
+
 The following is a correlation matrix of the 16 most important attributes. Note how the Win/Loss percentage value is negatively correlated to the Win/Loss percentage rank. As teams win more games their numerical rank becomes less. There are a number of highly correlated Value/Rank combinations and Rank/Rank combinations. Removing all Rank attributes may improve the model.
 
 ![alt tag](Images/Dataset-Correlation.png "Dataset Correlation")
@@ -267,7 +272,7 @@ The following is the decision tree after having removed all 'Rank' columns.
 
 ![alt tag](Images/Decision-Tree-Rank-Column-Removal.png "Decision Tree Rank Column Removal")
 
-Note the Accuracy and Kappa values, after cross-validation, are almost the same.
+Note the Accuracy, Kappa, Sensitivity, and Specificity values, after cross-validation, are slightly less.
 
 ![alt tag](Images/Decision-Tree-Confusion-Matrix-Normalized-Less-Rank.png "Decision Tree Confusion Matrix without Rank Columns")
 
@@ -284,31 +289,61 @@ A new variable importance yields the following top 20 most important variables. 
 
 #### Data Modeling - Random Forest
 
-Next a Random Forest model is built, based on the 16 most important attributes outlined above. The purpose of Random Forest is to randomly select different attributes on which to split. These individual trees are then combined to form one 'majority' answer.
+Next, a Random Forest model is built, based on the 20 most important attributes outlined above. The purpose of Random Forest is to randomly select different attributes on which to split. These individual trees are then combined to form one 'majority' answer.
 
 #### Data Modeling - K Nearest Neighbors
 
-KNN is a way of measuring the distance between an unlabeled object and labeled objects. The majority vote of the closest K objects that are labeled to an unlabeled object wins. For example, if out of the 10 closest labeled objects to an unlabeled object, 7 are wins and 3 are losses, the unlabeled object will be labeled as a win. Note, in the case of this dataset, the winning team's statistics and the losing team's statistics are all represented on the same record. The win or loss label is with respect to the 'team' on the record, not the 'opposing team'.
+KNN is a way of measuring the distance between an unlabeled object and labeled objects using a distance formula such as the Euclidean Distance. The majority vote of the closest K objects that are labeled to an unlabeled object wins. For example, if out of the 10 closest labeled objects to an unlabeled object, 7 are wins and 3 are losses, the unlabeled object will be labeled as a win. Note, in the case of this dataset, the winning team's statistics and the losing team's statistics are all represented on the same record. The win or loss label is with respect to the 'team' on the record, not the 'opposing team' on the record.
 
 #### Support Vector Machines
 
-Support Vector Machines attempt to separate data points using n-dimensional space. By separating data points, majority rule can take place. For example, if based on attributes, records can be separated, a group can be classified by its majority label.
+Support Vector Machines attempt to separate data points using n-dimensional space. By separating data points, majority rule can take place. For example, if based on attributes, records can be separated, a group can be classified by its majority label. After running SVM on the 20 most important variables, as computed by the Decision Tree model, the results follow. Note, the statistical values of Accuracy, Kappa, Sensitivity, and Specificity all fall in line with that of Decision Tree.
 
-After running SVM on the 20 most important variables, as computed by the Decision Tree model, the results follow. Note, the statistical values of Accuracy, Kappa, Sensitivity, and Specificity all fall in line with that of Decision Tree.
+![alt tag](Images/SVM-Confusion-Matrix.png "Support Vector Machine Confusion Matrix")
 
 1. Accuracy = 0.7624
 2. Kappa = 0.5248
 3. Sensitivity = 0.7637
 4. Specificity = 0.7610
 
-![alt tag](Images/SVM-Confusion-Matrix.png "Support Vector Machine Confusion Matrix")
-
 #### Artificial Neural Networks
 
-Artificial Neural Networks determine how much an attribute or combination of attributes contribute to a class. ANNs are resource intensive. The 16 most important attributes were used. This limited dataset may have contributed to the lack of accuracy of this model. With 16 attributes and a 223,141 record training dataset, the model took approximately 6.7 hours to build. It would be interesting to see if adding additional attributes will increase the accuracy of this model.
+Artificial Neural Networks determine how much an attribute or combination of attributes contribute to a class. ANNs are resource intensive. The 20 most important attributes were used. This limited dataset may have contributed to the lack of accuracy of this model. With 20 attributes and a 223,141 record training dataset, the model took approximately 6.7 hours to build. It would be interesting to see if adding additional attributes will increase the accuracy of this model.
 
 ![alt tag](Images/ANN-1-Hidden-Layer.png "Artificial Neural Network with One Hidden Layer")
 
 ![alt tag](Images/ANN-1-Hidden-Layer-Result.png "Artificial Neural Network with One Hidden Layer Result")
 
 ![alt tag](Images/ANN-1-Hidden-Layer-Graphic.png "Artificial Neural Network with One Hidden Layer Graph")
+
+#### Model Statistics Summary
+
+![alt tag](Images/Model-Statistics_Summary.png "Model Statistics Summary")
+
+#### References
+
+## Lantz, B. (2015). Machine Learning with R. Birmingham, UK: Packt.
+
+## Saxena, R. (2017). Decision Tree Classifier Implementation in R, Retrieved 12:00, June 2, 2019, from http://dataaspirant.com/2017/02/03/decision-tree-classifier-implementation-in-r/
+
+## Brownlee, J., R. (2014). Feature Selection with the Caret R Package, Retrieved 12:30, June 2, 2019, from https://machinelearningmastery.com/feature-selection-with-the-caret-r-package/
+
+## Brownlee, J., R. (2016). Tune Machine Learning Algorithms in R (Random Forest Case Study), Retrieved 13:00, June 2, 2019, from https://machinelearningmastery.com/tune-machine-learning-algorithms-in-r/
+
+## Big Computing. (2018). Big Computing, Retrieved 13:30, June 2, 2019, from http://bigcomputing.blogspot.com/2014/10/an-example-of-using-random-forest-in.html
+
+## Guru99. (2018). R Random Forest Tutorial with Example, Retrieved 14:00, June 2, 2019, from https://www.guru99.com/r-random-forest-tutorial.html
+
+## Tahsildar, S. (2019). Gini Index for Decision Trees, Retrieved 14:30, June 2, 2019, from https://blog.quantinsti.com/gini-index/
+
+## RDocumentation. (2019). svm, Retrieved 20:00, June 3, 2019, from https://www.rdocumentation.org/packages/e1071/versions/1.7-1/topics/svm
+
+## RDocumentation. (2019). neuralnet, Retrieved 20:00, June 3, 2019, from https://www.rdocumentation.org/packages/neuralnet/versions/1.44.2/topics/neuralnet
+
+## Black, P. (2019) Manhattan Distance. Retrieved 20:00, May 15, 2019 from  https://www.nist.gov/dads/HTML/manhattanDistance.html
+
+## Sehra, C. (2018). Decision Trees Explained Easily. Retrieved 12:00, May 30, 2019 from https://medium.com/@chiragsehra42/decision-trees-explained-easily-28f23241248
+
+## Sam, T. (2018) Entropy: How Decision Trees Make Decisions.  Retrieved 09:00, May 30, 2019 from  https://towardsdatascience.com/entropy-how-decision-trees-make-decisions-2946b9c18c8
+
+## Eight to Late. (2019). A Gentle Introduction to Support Vector Machines Using R. Retrieved 12:00, June 5, 2019 from https://eight2late.wordpress.com/2017/02/07/a-gentle-introduction-to-support-vector-machines-using-r/
