@@ -13,7 +13,7 @@ The above is an oversimplification of the game as a team is made up of approxima
 5. Model Analysis
 6. Summary
 
-#### Data Collection
+## Data Collection
 
 All data has been gathered from the NCAA Men's Basketball Archived Statistics website
 
@@ -140,7 +140,7 @@ headerPlayerStatisticsPivot = 'year_id' + delimiter +\
                               'triple_double_01' + delimiter + \
                               'disqualify_01' + delimiter +\
 
-#### Data Cleansing
+## Data Cleansing
 
 Teams have a varied number of players on their roster. Some teams have 12 players while other teams have 17 players. Within this dataset, each team will be represented by 15 players. The above header portion represents 1 of the 15 players on a teams roster. If a team has less then 15 players, the missing players will be populated with zero stats. This will ensure that each roster is uniform. The model will decide if a team gets penalized for having less than 15 players on its roster. A team's roster can be made up of a different combination of positions. For example, a team can carry 10 guards and 5 forwards or 10 forwards, 2 guards, and 3 centers. In order to give the model every opportunity to discover patterns in the data the players on a roster must be ordered. The players could be ordered by any number of attributes. For the purpose of this experiment, each roster's players are ordered by the number of field goals the player made. The stats at position '01' will belong to the player that made the most field goals. The stats at position '02' will belong to the player that made the second most field goals. This order is maintained all the way through the 15th player. The ordering of the players on a single record is handled by the Python web-scraping script.                             
 
@@ -162,7 +162,7 @@ Lastly, the web-scraping script pivots the players to a single record maintainin
 
 The Python script outputs three files. Additional data cleansing and bringing together 3 files to 1 file was done using an Oracle Cloud instance. This was used for its simplicity, power, and speed. Web scraping produced nulls for a small fraction of attributes. In addition, teams without at least 15 players on their roster were padded with null players. Oracle's data definition language was used to  default null columns to zero. Once the data was read into Oracle, the three tables were joined by division, year, and team in order to produce dataset records that contained team results, team statistics, and player statistics, again all on a single record. With cleansed data we can now move on to the next step.
 
-#### Exploratory Data Analysis
+## Exploratory Data Analysis
 
 The desktop, student, version of Tableau was chosen to explore this rich dataset full of basketball statistics. The dataset contains 247,933 records each with 966 variables from three divisions of Men's college basketball, spanning years 2010 to 2018.
 
@@ -212,7 +212,7 @@ The following graphic illustrates the number of field goals attempted against th
 
 The above graphics are only a fraction of what tells the picture of a basketball game. With so many statistics represented within the dataset and so many more that could be represented, it is difficult to get a clear picture of what contributes to a win or a loss. Modeling the data is a step that can bring us closer to that answer.
 
-#### Data Modeling - Decision Trees
+## Data Modeling - Decision Trees
 
 Decision Trees are a way of coming to a decision by divide and conquer until a class is met. For example, if a team's field goal percentage is greater than 50% go one way, if it is not go the other way. At the next tree node the split may be decided on a different attribute. For example, if player 5 has a free throw percentage less then 50% go one way, if not, go the other way.
 
@@ -243,7 +243,7 @@ Building other models with 965 predictors may become problematic. The decision t
 
 Much preparation went into getting to this point. 965 predictors were collected yet, based on decision tree, only 16 were important. The key statistics of the game are all covered in the top 16 predictors. One predictor that stands out is the 'OPP_GAMES_PLAYED_05'. This is the number of games the opposing team's 5th ranked (by field goals) player played. Of the 15 players, representing each team, this player was singled out as being important to the model.
 
-#### Data Modeling - Decision Trees - Normalized Dataset
+## Data Modeling - Decision Trees - Normalized Dataset
 
 The following is a snapshot of this dataset after normalization. Normalizing a dataset is a way of making sure no one attribute overpowers another during model build. Interestingly, the decision tree build, based on a normalized dataset yielded the same results for Decision Tree, Accuracy, Kappa, Sensitivity, and Specificity.
 
@@ -287,15 +287,15 @@ A new variable importance yields the following top 20 most important variables. 
 3. Sensitivity = 0.7533
 4. Specificity = 0.7331
 
-#### Data Modeling - Random Forest
+## Data Modeling - Random Forest
 
 Next, a Random Forest model is built, based on the 20 most important attributes outlined above. The purpose of Random Forest is to randomly select different attributes on which to split. These individual trees are then combined to form one 'majority' answer.
 
-#### Data Modeling - K Nearest Neighbors
+## Data Modeling - K Nearest Neighbors
 
 KNN is a way of measuring the distance between an unlabeled object and labeled objects using a distance formula such as the Euclidean Distance. The majority vote of the closest K objects that are labeled to an unlabeled object wins. For example, if out of the 10 closest labeled objects to an unlabeled object, 7 are wins and 3 are losses, the unlabeled object will be labeled as a win. Note, in the case of this dataset, the winning team's statistics and the losing team's statistics are all represented on the same record. The win or loss label is with respect to the 'team' on the record, not the 'opposing team' on the record.
 
-#### Support Vector Machines
+## Support Vector Machines
 
 Support Vector Machines attempt to separate data points using n-dimensional space. By separating data points, majority rule can take place. For example, if based on attributes, records can be separated, a group can be classified by its majority label. After running SVM on the 20 most important variables, as computed by the Decision Tree model, the results follow. Note, the statistical values of Accuracy, Kappa, Sensitivity, and Specificity all fall in line with that of Decision Tree.
 
@@ -306,7 +306,7 @@ Support Vector Machines attempt to separate data points using n-dimensional spac
 3. Sensitivity = 0.7637
 4. Specificity = 0.7610
 
-#### Artificial Neural Networks
+## Artificial Neural Networks
 
 Artificial Neural Networks determine how much an attribute or combination of attributes contribute to a class. ANNs are resource intensive. The 20 most important attributes were used. This limited dataset may have contributed to the lack of accuracy of this model. With 20 attributes and a 223,141 record training dataset, the model took approximately 6.7 hours to build. It would be interesting to see if adding additional attributes will increase the accuracy of this model.
 
@@ -316,34 +316,34 @@ Artificial Neural Networks determine how much an attribute or combination of att
 
 ![alt tag](Images/ANN-1-Hidden-Layer-Graphic.png "Artificial Neural Network with One Hidden Layer Graph")
 
-#### Model Statistics Summary
+## Model Statistics Summary
 
 ![alt tag](Images/Model-Statistics_Summary.png "Model Statistics Summary")
 
-#### References
+## References
 
-## Lantz, B. (2015). Machine Learning with R. Birmingham, UK: Packt.
+### Lantz, B. (2015). Machine Learning with R. Birmingham, UK: Packt.
 
-## Saxena, R. (2017). Decision Tree Classifier Implementation in R, Retrieved 12:00, June 2, 2019, from http://dataaspirant.com/2017/02/03/decision-tree-classifier-implementation-in-r/
+### Saxena, R. (2017). Decision Tree Classifier Implementation in R, Retrieved 12:00, June 2, 2019, from http://dataaspirant.com/2017/02/03/decision-tree-classifier-implementation-in-r/
 
-## Brownlee, J., R. (2014). Feature Selection with the Caret R Package, Retrieved 12:30, June 2, 2019, from https://machinelearningmastery.com/feature-selection-with-the-caret-r-package/
+### Brownlee, J., R. (2014). Feature Selection with the Caret R Package, Retrieved 12:30, June 2, 2019, from https://machinelearningmastery.com/feature-selection-with-the-caret-r-package/
 
-## Brownlee, J., R. (2016). Tune Machine Learning Algorithms in R (Random Forest Case Study), Retrieved 13:00, June 2, 2019, from https://machinelearningmastery.com/tune-machine-learning-algorithms-in-r/
+### Brownlee, J., R. (2016). Tune Machine Learning Algorithms in R (Random Forest Case Study), Retrieved 13:00, June 2, 2019, from https://machinelearningmastery.com/tune-machine-learning-algorithms-in-r/
 
-## Big Computing. (2018). Big Computing, Retrieved 13:30, June 2, 2019, from http://bigcomputing.blogspot.com/2014/10/an-example-of-using-random-forest-in.html
+### Big Computing. (2018). Big Computing, Retrieved 13:30, June 2, 2019, from http://bigcomputing.blogspot.com/2014/10/an-example-of-using-random-forest-in.html
 
-## Guru99. (2018). R Random Forest Tutorial with Example, Retrieved 14:00, June 2, 2019, from https://www.guru99.com/r-random-forest-tutorial.html
+### Guru99. (2018). R Random Forest Tutorial with Example, Retrieved 14:00, June 2, 2019, from https://www.guru99.com/r-random-forest-tutorial.html
 
-## Tahsildar, S. (2019). Gini Index for Decision Trees, Retrieved 14:30, June 2, 2019, from https://blog.quantinsti.com/gini-index/
+### Tahsildar, S. (2019). Gini Index for Decision Trees, Retrieved 14:30, June 2, 2019, from https://blog.quantinsti.com/gini-index/
 
-## RDocumentation. (2019). svm, Retrieved 20:00, June 3, 2019, from https://www.rdocumentation.org/packages/e1071/versions/1.7-1/topics/svm
+### RDocumentation. (2019). svm, Retrieved 20:00, June 3, 2019, from https://www.rdocumentation.org/packages/e1071/versions/1.7-1/topics/svm
 
-## RDocumentation. (2019). neuralnet, Retrieved 20:00, June 3, 2019, from https://www.rdocumentation.org/packages/neuralnet/versions/1.44.2/topics/neuralnet
+### RDocumentation. (2019). neuralnet, Retrieved 20:00, June 3, 2019, from https://www.rdocumentation.org/packages/neuralnet/versions/1.44.2/topics/neuralnet
 
-## Black, P. (2019) Manhattan Distance. Retrieved 20:00, May 15, 2019 from  https://www.nist.gov/dads/HTML/manhattanDistance.html
+### Black, P. (2019) Manhattan Distance. Retrieved 20:00, May 15, 2019 from  https://www.nist.gov/dads/HTML/manhattanDistance.html
 
-## Sehra, C. (2018). Decision Trees Explained Easily. Retrieved 12:00, May 30, 2019 from https://medium.com/@chiragsehra42/decision-trees-explained-easily-28f23241248
+### Sehra, C. (2018). Decision Trees Explained Easily. Retrieved 12:00, May 30, 2019 from https://medium.com/@chiragsehra42/decision-trees-explained-easily-28f23241248
 
-## Sam, T. (2018) Entropy: How Decision Trees Make Decisions.  Retrieved 09:00, May 30, 2019 from  https://towardsdatascience.com/entropy-how-decision-trees-make-decisions-2946b9c18c8
+### Sam, T. (2018) Entropy: How Decision Trees Make Decisions.  Retrieved 09:00, May 30, 2019 from  https://towardsdatascience.com/entropy-how-decision-trees-make-decisions-2946b9c18c8
 
-## Eight to Late. (2019). A Gentle Introduction to Support Vector Machines Using R. Retrieved 12:00, June 5, 2019 from https://eight2late.wordpress.com/2017/02/07/a-gentle-introduction-to-support-vector-machines-using-r/
+### Eight to Late. (2019). A Gentle Introduction to Support Vector Machines Using R. Retrieved 12:00, June 5, 2019 from https://eight2late.wordpress.com/2017/02/07/a-gentle-introduction-to-support-vector-machines-using-r/
