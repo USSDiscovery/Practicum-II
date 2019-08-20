@@ -318,7 +318,7 @@ Artificial Neural Networks determine how much an attribute or combination of att
 
 ## Model Statistics Summary
 
-![alt tag](Images/Model-Statistics_Summary.png "Model Statistics Summary")
+![alt tag](Images/Model-Statistics-Summary.png "Model Statistics Summary")
 
 ## References
 
