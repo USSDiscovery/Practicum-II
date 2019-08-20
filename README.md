@@ -21,21 +21,21 @@ All data has been gathered from the NCAA Men's Basketball Archived Statistics we
 
 There are 3 divisions in Men's NCAA Basketball. These divisions and there respective teams are illustrated below:
 
-### Division 1 - 353 Teams
+#### Division 1 - 353 Teams
 
 ![alt tag](Images/Division-I.png "Division 1")
 
-### Division 2 - 309 Teams
+#### Division 2 - 309 Teams
 
 ![alt tag](Images/Division-II.png "Division 2")
 
-### Division 3 - 427 Teams
+#### Division 3 - 427 Teams
 
 ![alt tag](Images/Division-III.png "Division 3")
 
 The initial thought was to simply download the needed statistics from the NCAA Statistics website. However, upon further investigation, it was determined that this would not yield a statistical dataset rich enough with predictors. As a result, Python along with the BeautifulSoup library is used to scrape the website. Scraping the website allows for the collection of a dataset rich with predictors. It also allows for the data to be cleansed as it is collected and in a preferable, comma-separated format. While coding was like programming your way through 'soup', the BeautifulSoup library did assist with data extraction from a nested HTML data structure. The data extraction is broken down into Team Statistics, Team Results, and Player Statistics. One important note to point out is that the dataset is naturally balanced. That is, there will be an equal number of wins to losses. Put another way, for every team that wins there will be a team that losses.
 
-### Team statistics
+#### Team statistics
 
 ![alt tag](Images/Team-Statistics.png "Team Statistics")
 
@@ -77,7 +77,7 @@ header = 'year_id' + delimiter +\
          'won_lost_per_rank' + delimiter +\
          'won_lost_per_value'
 
-### Team Results
+#### Team Results
 
 ![alt tag](Images/Team-Results.png "Team Results")
 
@@ -97,7 +97,7 @@ headerResults = 'year_id' + delimiter +\
                 'team_score' + delimiter +\
                 'opposing_team_score'
 
-### Player Statistics
+#### Player Statistics
 
 As the Python code iterates through teams, each team's player statistics are recorded to a file. The following is the Team Player Statistic's file header as extracted from code:
 
@@ -168,17 +168,17 @@ The desktop, student, version of Tableau was chosen to explore this rich dataset
 
 The following are a few illustrations of this dataset:
 
-### Number of Games Played by division
+#### Number of Games Played by division
 
 ![alt tag](Images/Division-Number-Games-Played.png "Number of Games Played by Division")
 
-### Average Scoring Offense - Average Scoring Defense - Field Goal Percentage - Three Point Field Goal Percentage
+#### Average Scoring Offense - Average Scoring Defense - Field Goal Percentage - Three Point Field Goal Percentage
 
 ![alt tag](Images/Division-Measures.png "Average Scoring Offense - Average Scoring Defense - Field Goal Percentage - Three Point Field Goal Percentage")
 
 The above illustrates the divisions are fairly evenly measured with Division 2 having a slight edge.
 
-### The following focuses on Division 1 Teams:
+#### The following focuses on Division 1 Teams:
 
 This illustrates the Division 1 Top Ten Teams by Wins for the 2018-2019 season. Note Virginia did win the championship that year.
 
@@ -196,7 +196,7 @@ This next graphic brings the above attributes together.
 
 ![alt tag](Images/Division-I-Team-Results-Team-Scoring-Team-Scoring-Defense.png "Division 1 Team Results - Team Scoring - Team Scoring Defense")
 
-### The following focuses on Division 1 Players:
+#### The following focuses on Division 1 Players:
 
 The average height at the positions of guard, forward, and center are comparable across divisions.
 
@@ -322,28 +322,28 @@ Artificial Neural Networks determine how much an attribute or combination of att
 
 ## References
 
-### Lantz, B. (2015). Machine Learning with R. Birmingham, UK: Packt.
+#### Lantz, B. (2015). Machine Learning with R. Birmingham, UK: Packt.
 
-### Saxena, R. (2017). Decision Tree Classifier Implementation in R, Retrieved 12:00, June 2, 2019, from http://dataaspirant.com/2017/02/03/decision-tree-classifier-implementation-in-r/
+#### Saxena, R. (2017). Decision Tree Classifier Implementation in R, Retrieved 12:00, June 2, 2019, from http://dataaspirant.com/2017/02/03/decision-tree-classifier-implementation-in-r/
 
-### Brownlee, J., R. (2014). Feature Selection with the Caret R Package, Retrieved 12:30, June 2, 2019, from https://machinelearningmastery.com/feature-selection-with-the-caret-r-package/
+#### Brownlee, J., R. (2014). Feature Selection with the Caret R Package, Retrieved 12:30, June 2, 2019, from https://machinelearningmastery.com/feature-selection-with-the-caret-r-package/
 
-### Brownlee, J., R. (2016). Tune Machine Learning Algorithms in R (Random Forest Case Study), Retrieved 13:00, June 2, 2019, from https://machinelearningmastery.com/tune-machine-learning-algorithms-in-r/
+#### Brownlee, J., R. (2016). Tune Machine Learning Algorithms in R (Random Forest Case Study), Retrieved 13:00, June 2, 2019, from https://machinelearningmastery.com/tune-machine-learning-algorithms-in-r/
 
-### Big Computing. (2018). Big Computing, Retrieved 13:30, June 2, 2019, from http://bigcomputing.blogspot.com/2014/10/an-example-of-using-random-forest-in.html
+#### Big Computing. (2018). Big Computing, Retrieved 13:30, June 2, 2019, from http://bigcomputing.blogspot.com/2014/10/an-example-of-using-random-forest-in.html
 
-### Guru99. (2018). R Random Forest Tutorial with Example, Retrieved 14:00, June 2, 2019, from https://www.guru99.com/r-random-forest-tutorial.html
+#### Guru99. (2018). R Random Forest Tutorial with Example, Retrieved 14:00, June 2, 2019, from https://www.guru99.com/r-random-forest-tutorial.html
 
-### Tahsildar, S. (2019). Gini Index for Decision Trees, Retrieved 14:30, June 2, 2019, from https://blog.quantinsti.com/gini-index/
+#### Tahsildar, S. (2019). Gini Index for Decision Trees, Retrieved 14:30, June 2, 2019, from https://blog.quantinsti.com/gini-index/
 
-### RDocumentation. (2019). svm, Retrieved 20:00, June 3, 2019, from https://www.rdocumentation.org/packages/e1071/versions/1.7-1/topics/svm
+#### RDocumentation. (2019). svm, Retrieved 20:00, June 3, 2019, from https://www.rdocumentation.org/packages/e1071/versions/1.7-1/topics/svm
 
-### RDocumentation. (2019). neuralnet, Retrieved 20:00, June 3, 2019, from https://www.rdocumentation.org/packages/neuralnet/versions/1.44.2/topics/neuralnet
+#### RDocumentation. (2019). neuralnet, Retrieved 20:00, June 3, 2019, from https://www.rdocumentation.org/packages/neuralnet/versions/1.44.2/topics/neuralnet
 
-### Black, P. (2019) Manhattan Distance. Retrieved 20:00, May 15, 2019 from  https://www.nist.gov/dads/HTML/manhattanDistance.html
+#### Black, P. (2019) Manhattan Distance. Retrieved 20:00, May 15, 2019 from  https://www.nist.gov/dads/HTML/manhattanDistance.html
 
-### Sehra, C. (2018). Decision Trees Explained Easily. Retrieved 12:00, May 30, 2019 from https://medium.com/@chiragsehra42/decision-trees-explained-easily-28f23241248
+#### Sehra, C. (2018). Decision Trees Explained Easily. Retrieved 12:00, May 30, 2019 from https://medium.com/@chiragsehra42/decision-trees-explained-easily-28f23241248
 
-### Sam, T. (2018) Entropy: How Decision Trees Make Decisions.  Retrieved 09:00, May 30, 2019 from  https://towardsdatascience.com/entropy-how-decision-trees-make-decisions-2946b9c18c8
+#### Sam, T. (2018) Entropy: How Decision Trees Make Decisions.  Retrieved 09:00, May 30, 2019 from  https://towardsdatascience.com/entropy-how-decision-trees-make-decisions-2946b9c18c8
 
-### Eight to Late. (2019). A Gentle Introduction to Support Vector Machines Using R. Retrieved 12:00, June 5, 2019 from https://eight2late.wordpress.com/2017/02/07/a-gentle-introduction-to-support-vector-machines-using-r/
+#### Eight to Late. (2019). A Gentle Introduction to Support Vector Machines Using R. Retrieved 12:00, June 5, 2019 from https://eight2late.wordpress.com/2017/02/07/a-gentle-introduction-to-support-vector-machines-using-r/
