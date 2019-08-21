@@ -350,6 +350,10 @@ Artificial Neural Networks determine how much an attribute or combination of att
 
 ![alt tag](Images/Model-Statistics-Summary.png "Model Statistics Summary")
 
+## Conclusion
+
+This project focused on analyzing NCAA Men's Basketball Statistics for hundreds of teams across three divisions. Approximately 248,000 records, each with 965 attributes were collected. Exploratory Data Analysis was done during Python data scraping and by visualization using Tableau. Data Cleansing was done during Python data scraping and by using an Oracle Cloud Instance. Using Oracle, data was cleansed through its data definition language and via SQL once the tables were built and loaded. Having the data in SQL tables allowed for the data to be iteratively cleansed. Initial Decision Tree analysis found that out of the 965 predictors, only a fraction of those predictors were important. While running all data through Decision Tree, it was discovered that the desktop machine being used was not powerful enough. Specifically, it did not have enough memory. Computation was then moved to AWS cloud where EC2 instances, with enough resources, could be launched at will. These instances were launched as spot instances at a fraction of the normal dedicated instance price. With the important variables computed by Decision Tree, Random Forest, K Nearest Neighbor, Support Vector Machine, and Artificial Neural Network models were built. Accuracy, Kappa, Sensitivity, and Specificity statistics were compiled and compared. While all models produced similar statistical values, K Nearest Neighbors and Support Vector Machines produced the best statistical values with a 76 percent accuracy. Interestingly, both of these methods compute based on distance. Support Vector Machine attempts to achieve separation of data points. K Nearest Neighbor does not actually build a model. KNN is a relatively simple computation that computes the distance between points and then categorizes based on the label of the K number of nearest points.
+
 ## References
 
 #### Lantz, B. (2015). Machine Learning with R. Birmingham, UK: Packt.
