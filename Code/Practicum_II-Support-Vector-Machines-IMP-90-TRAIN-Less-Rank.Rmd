@@ -1,0 +1,207 @@
+---
+title: "Practium_II-Support Vector Machines"
+author: "Richard Bird"
+date: "8/12/2019"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Libraries
+```{r LoadLibraries}
+library("R.utils")
+library("caret")
+library("rpart")
+library("rpart.plot")
+library("mlbench")
+library("corrplot")
+library("class")
+library("e1071")
+library("gmodels")
+library("mice")
+library("neuralnet")
+library("plyr") 
+library("pROC")
+```
+
+## Multicore
+```{r Multicore}
+#library("doMC")
+#registerDoMC(cores = 4)
+```
+
+## Read delimited file to dataframe
+```{r ReadDataset}
+FileName <- "statistics_export.txt"
+BasketballBKP <- read.csv(FileName, head=TRUE, sep=",")
+Basketball <- BasketballBKP
+```
+
+## Summarize basketball
+```{r BasketballSummary}
+summary(Basketball)
+```
+
+## Summarize dataset
+```{r BasketballStr}
+str(Basketball)
+```
+
+## Count dataset
+Number of Rows Basketball
+```{r BasketballCount}
+nrow(Basketball)
+```
+
+## Check dataset for null variable entries and exclude records from dataset with null variable entries.
+```{r BasketballMissingValues}
+anyNA(Basketball)
+```
+
+#
+#
+#
+### IMPORTANCE DATAFRAME ###
+#
+#
+#
+
+## Define Normalize function
+```{r NormalizeFunction}
+normalize<-function(x) {return (((x - min(x)) / (max(x) - min(x))))}
+```
+
+```{r BasketballNormalize}
+BasketballNormalize <- as.data.frame(lapply(BasketballBKP[1:966], normalize))
+anyNA(BasketballNormalize)
+BasketballNormalize[is.na(BasketballNormalize)] <- 0
+anyNA(BasketballNormalize)
+str(BasketballNormalize)
+nrow(BasketballNormalize)
+```
+
+## Convert label to factor
+```{r ConvertLabelToFactorNormalize}
+BasketballNormalize$RESULT <- factor(BasketballNormalize$RESULT)
+str(BasketballNormalize)
+```
+
+#
+#
+#
+### IMPORTANCE DATAFRAME ###
+#
+#
+#
+
+```{R ImportanceDataframe}
+BasketballIMP <- cbind(as.data.frame(BasketballNormalize$WON_LOST_PER_VALUE),
+                       as.data.frame(BasketballNormalize$SCORING_MARGIN_VALUE),
+                       as.data.frame(BasketballNormalize$OPP_WON_LOST_PER_VALUE),
+                       as.data.frame(BasketballNormalize$OPP_SCORING_MARGIN_VALUE),
+                       as.data.frame(BasketballNormalize$HOME_OR_AWAY),
+                       as.data.frame(BasketballNormalize$FIELD_GOAL_PER_VALUE),
+                       as.data.frame(BasketballNormalize$REBOUND_MARGIN_VALUE),
+                       as.data.frame(BasketballNormalize$ASSIST_TURNOVER_RATIO_VALUE),
+                       as.data.frame(BasketballNormalize$OPP_SCORING_DEFENCE_VALUE),
+                       as.data.frame(BasketballNormalize$GAMES_PLAYED_02),
+                       as.data.frame(BasketballNormalize$BLOCKED_SHOTS_PER_GAME_VALUE),
+                       as.data.frame(BasketballNormalize$OPP_GAMES_STARTED_02),
+                       as.data.frame(BasketballNormalize$OPP_FIELD_GOAL_PER_VALUE),
+                       as.data.frame(BasketballNormalize$ASSISTS_PER_GAME_VALUE),
+                       as.data.frame(BasketballNormalize$OPP_GAMES_PLAYED_05),
+                       as.data.frame(BasketballNormalize$FIELD_GOAL_PER_DEFENSE_VALUE),
+					   as.data.frame(BasketballNormalize$OPP_REBOUND_MARGIN_VALUE),
+                       as.data.frame(BasketballNormalize$GAMES_PLAYED_03),
+                       as.data.frame(BasketballNormalize$THREE_PT_FIELD_GOALS_PER_VALUE),
+                       as.data.frame(BasketballNormalize$OPP_GAMES_PLAYED_02),
+                       as.data.frame(BasketballNormalize$RESULT))
+colnames(BasketballIMP) <- c("WON_LOST_PER_VALUE",
+							 "SCORING_MARGIN_VALUE",
+							 "OPP_WON_LOST_PER_VALUE",
+							 "OPP_SCORING_MARGIN_VALUE",
+							 "HOME_OR_AWAY",
+							 "FIELD_GOAL_PER_VALUE",
+							 "REBOUND_MARGIN_VALUE",
+							 "ASSIST_TURNOVER_RATIO_VALUE",
+							 "OPP_SCORING_DEFENCE_VALUE",
+							 "GAMES_PLAYED_02",
+							 "BLOCKED_SHOTS_PER_GAME_VALUE",
+							 "OPP_GAMES_STARTED_02",
+							 "OPP_FIELD_GOAL_PER_VALUE",
+							 "ASSISTS_PER_GAME_VALUE",
+							 "OPP_GAMES_PLAYED_05",
+							 "FIELD_GOAL_PER_DEFENSE_VALUE",
+							 "OPP_REBOUND_MARGIN_VALUE",
+							 "GAMES_PLAYED_03",
+							 "THREE_PT_FIELD_GOALS_PER_VALUE",
+							 "OPP_GAMES_PLAYED_02",
+                             "RESULT")
+str(BasketballIMP)
+nrow(BasketballIMP)
+anyNA(BasketballIMP)
+head(BasketballIMP$RESULT)
+```
+
+```{r BasketballTrainTestIMP}
+set.seed(4567)
+BasketballTrainIndexIMP <- createDataPartition(y = BasketballIMP$RESULT, p = 0.9, list=FALSE)
+BasketballTrainIMP <- BasketballIMP[BasketballTrainIndexIMP,]
+BasketballTestIMP <- BasketballIMP[-BasketballTrainIndexIMP,]
+dim(BasketballTrainIMP)
+dim(BasketballTestIMP)
+```
+
+#
+#
+#
+### SVM - SUPPORT VECTOR MACHINES ###
+#
+#
+#
+
+## SVM Radial
+```{r BasketballSVMRadial}
+set.seed(4567)
+system.time(BasketballSVMTrainFit <- svm(RESULT~., 
+                                         data = BasketballTrainIMP, 
+                                         kernel = "radial", 
+                                         cost = 1, 
+                                         gamma = 1/ncol(BasketballTrainIMP)))
+BasketballSVMTrainFit
+```
+
+## SVM Predict Radial
+```{r BasketballSVMPredictRadial}
+system.time(BasketballSVMPredict <- predict(BasketballSVMTrainFit, BasketballTestIMP[, !names(BasketballTestIMP) %in% c("RESULT")]))
+BasketballSVMTestTable <- table(BasketballSVMPredict, BasketballTestIMP$RESULT)
+BasketballSVMTestTable
+classAgreement(BasketballSVMTestTable)
+confusionMatrix(BasketballSVMTestTable)
+```
+
+## References
+
+## Lantz, B. (2015). Machine Learning with R. Birmingham, UK: Packt.
+
+## Saxena, R. (2017). Decision Tree Classifier Implementation in R, Retrieved 12:00, June 2, 2019, from http://dataaspirant.com/2017/02/03/decision-tree-classifier-implementation-in-r/ 
+
+## Brownlee, J., R. (2014). Feature Selection with the Caret R Package, Retrieved 12:30, June 2, 2019, from https://machinelearningmastery.com/feature-selection-with-the-caret-r-package/
+
+## Brownlee, J., R. (2016). Tune Machine Learning Algorithms in R (Random Forest Case Study), Retrieved 13:00, June 2, 2019, from https://machinelearningmastery.com/tune-machine-learning-algorithms-in-r/
+
+## Big Computing. (2018). Big Computing, Retrieved 13:30, June 2, 2019, from http://bigcomputing.blogspot.com/2014/10/an-example-of-using-random-forest-in.html
+
+## Guru99. (2018). R Random Forest Tutorial with Example, Retrieved 14:00, June 2, 2019, from https://www.guru99.com/r-random-forest-tutorial.html
+
+## Tahsildar, S. (2019). Gini Index for Decision Trees, Retrieved 14:30, June 2, 2019, from https://blog.quantinsti.com/gini-index/
+
+## RDocumentation. (2019). svm, Retrieved 20:00, June 3, 2019, from https://www.rdocumentation.org/packages/e1071/versions/1.7-1/topics/svm
+
+## RDocumentation. (2019). neuralnet, Retrieved 20:00, June 3, 2019, from https://www.rdocumentation.org/packages/neuralnet/versions/1.44.2/topics/neuralnet
+

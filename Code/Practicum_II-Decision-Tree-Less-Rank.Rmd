@@ -1,0 +1,300 @@
+---
+title: "Practium_II-Decision-Tree"
+author: "Richard Bird"
+date: "8/12/2019"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Libraries
+```{r LoadLibraries}
+library("R.utils")
+library("caret")
+library("rpart")
+library("rpart.plot")
+library("mlbench")
+library("corrplot")
+library("class")
+library("e1071")
+library("gmodels")
+library("mice")
+library("neuralnet")
+library("plyr") 
+library("pROC")
+```
+
+## Multicore
+```{r Multicore}
+#library("doMC")
+#registerDoMC(cores = 4)
+```
+
+## Read delimited file to dataframe
+```{r ReadDataset}
+FileName <- "statistics_export.txt"
+BasketballBKP <- read.csv(FileName, head=TRUE, sep=",")
+Basketball <- BasketballBKP
+```
+
+## Summarize basketball
+```{r BasketballSummary}
+summary(Basketball)
+```
+
+## Summarize dataset
+```{r BasketballStr}
+str(Basketball)
+```
+
+## Count dataset
+Number of Rows Basketball
+```{r BasketballCount}
+nrow(Basketball)
+```
+
+## Check dataset for null variable entries and exclude records from dataset with null variable entries.
+```{r BasketballMissingValues}
+anyNA(Basketball)
+```
+
+## Remove Rank columns
+```{r BasketballRemoveRank}
+Basketball <- subset(Basketball, select = -c(SCORING_OFFENSE_RANK))
+Basketball <- subset(Basketball, select = -c(SCORING_DEFENCE_RANK))
+Basketball <- subset(Basketball, select = -c(SCORING_MARGIN_RANK))
+Basketball <- subset(Basketball, select = -c(REBOUND_MARGIN_RANK))
+Basketball <- subset(Basketball, select = -c(ASSISTS_PER_GAME_RANK))
+Basketball <- subset(Basketball, select = -c(BLOCKED_SHOTS_PER_GAME_RANK))
+Basketball <- subset(Basketball, select = -c(STEALS_PER_GAME_RANK))
+Basketball <- subset(Basketball, select = -c(TURNOVER_MARGIN_RANK))
+Basketball <- subset(Basketball, select = -c(ASSIST_TURNOVER_RATIO_RANK))
+Basketball <- subset(Basketball, select = -c(FIELD_GOAL_PER_RANK))
+Basketball <- subset(Basketball, select = -c(FIELD_GOAL_PER_DEFENSE_RANK))
+Basketball <- subset(Basketball, select = -c(THREE_PT_FIELD_GOALS_PER_RANK))
+Basketball <- subset(Basketball, select = -c(THREE_PT_FIELD_GOAL_PER_RANK))
+Basketball <- subset(Basketball, select = -c(FREE_THROW_PER_RANK))
+Basketball <- subset(Basketball, select = -c(WON_LOST_PER_RANK))
+Basketball <- subset(Basketball, select = -c(OPP_SCORING_OFFENSE_RANK))
+Basketball <- subset(Basketball, select = -c(OPP_SCORING_DEFENCE_RANK))
+Basketball <- subset(Basketball, select = -c(OPP_SCORING_MARGIN_RANK))
+Basketball <- subset(Basketball, select = -c(OPP_REBOUND_MARGIN_RANK))
+Basketball <- subset(Basketball, select = -c(OPP_ASSISTS_PER_GAME_RANK))
+Basketball <- subset(Basketball, select = -c(OPP_BLOCKED_SHOTS_PER_GAME_RANK))
+Basketball <- subset(Basketball, select = -c(OPP_STEALS_PER_GAME_RANK))
+Basketball <- subset(Basketball, select = -c(OPP_TURNOVER_MARGIN_RANK))
+Basketball <- subset(Basketball, select = -c(OPP_ASSIST_TURNOVER_RATIO_RANK))
+Basketball <- subset(Basketball, select = -c(OPP_FIELD_GOAL_PER_RANK))
+Basketball <- subset(Basketball, select = -c(OPP_FIELD_GOAL_PER_DEFENSE_RANK))
+Basketball <- subset(Basketball, select = -c(OPP_THREE_PT_FIELD_GOALS_PER_RANK))
+Basketball <- subset(Basketball, select = -c(OPP_THREE_PT_FIELD_GOAL_PER_RANK))
+Basketball <- subset(Basketball, select = -c(OPP_FREE_THROW_PER_RANK))
+Basketball <- subset(Basketball, select = -c(OPP_WON_LOST_PER_RANK))
+```
+
+#
+#
+#
+### DECISION TREE ###
+#
+#
+#
+
+## Convert label to factor
+```{r ConvertLabelToFactor}
+Basketball$RESULT <- factor(Basketball$RESULT)
+str(Basketball)
+```
+
+```{r BasketballTrainTest}
+set.seed(4567)
+BasketballTrainIndex <- createDataPartition(y = Basketball$RESULT, p = 0.9, list=FALSE)
+BasketballTrain <- Basketball[BasketballTrainIndex,]
+BasketballTest <- Basketball[-BasketballTrainIndex,]
+dim(BasketballTrain)
+dim(BasketballTest)
+```
+
+## Basketball Train Decision Tree Information
+```{r BasketballTrainDecisionTree}
+BasketballTrainControl <- trainControl(method = "repeatedcv", number = 10, repeats = 3)
+set.seed(4567)
+system.time(BasketballTrainFit <- train(RESULT ~., 
+                      data = BasketballTrain, 
+                      method = "rpart", 
+                      parms = list(split = "information"), 
+                      trControl=BasketballTrainControl, tuneLength = 10))
+BasketballTrainFit
+```
+
+## Basketball Feature Importance
+```{r BasketballFeatureImportance}
+BasketballFeatureImportance <- varImp(BasketballTrainFit, scale=FALSE)
+print(BasketballFeatureImportance)
+```
+
+## Print Decision Tree Information
+```{r PrintDecisionTree}
+prp(BasketballTrainFit$finalModel, box.palette = "Reds", tweak = 1.2)
+```
+
+## Basketball Test Decision Tree Information
+```{r BasketballTestDecisionTree}
+system.time(BasketballTrainTest <- predict(BasketballTrainFit, newdata = BasketballTest))
+confusionMatrix(BasketballTrainTest, BasketballTest$RESULT)
+```
+
+#
+#
+#
+### DECISION TREE NORMALIZE ###
+#
+#
+#
+
+## Define Normalize function
+```{r NormalizeFunction}
+normalize<-function(x) {return (((x - min(x)) / (max(x) - min(x))))}
+```
+
+```{r BasketballNormalize}
+BasketballNormalize <- as.data.frame(lapply(BasketballBKP[1:966], normalize))
+anyNA(BasketballNormalize)
+BasketballNormalize[is.na(BasketballNormalize)] <- 0
+anyNA(BasketballNormalize)
+str(BasketballNormalize)
+nrow(BasketballNormalize)
+```
+
+## Convert label to factor
+```{r ConvertLabelToFactorNormalize}
+BasketballNormalize$RESULT <- factor(BasketballNormalize$RESULT)
+str(BasketballNormalize)
+```
+
+```{r BasketballTrainTestNormalize}
+set.seed(4567)
+BasketballTrainIndexNM <- createDataPartition(y = BasketballNormalize$RESULT, p = 0.9, list=FALSE)
+BasketballTrainNM <- BasketballNormalize[BasketballTrainIndexNM,]
+BasketballTestNM <- BasketballNormalize[-BasketballTrainIndexNM,]
+dim(BasketballTrainNM)
+dim(BasketballTestNM)
+```
+
+## Basketball Train Decision Tree Information
+```{r BasketballTrainDecisionTreeNormalize}
+BasketballTrainControlNM <- trainControl(method = "repeatedcv", number = 10, repeats = 3)
+set.seed(4567)
+system.time(BasketballTrainFitNM <- train(RESULT ~., 
+                      data = BasketballTrainNM, 
+                      method = "rpart", 
+                      parms = list(split = "information"), 
+                      trControl=BasketballTrainControlNM, tuneLength = 10))
+BasketballTrainFitNM
+```
+
+## Basketball Feature Importance
+```{r BasketballFeatureImportanceNormalize}
+BasketballFeatureImportanceNM <- varImp(BasketballTrainFitNM, scale=FALSE)
+print(BasketballFeatureImportanceNM)
+```
+
+## Print Decision Tree Information
+```{r PrintDecisionTreeNormalize}
+prp(BasketballTrainFitNM$finalModel, box.palette = "Reds", tweak = 1.2)
+```
+
+## Basketball Test Decision Tree Information
+```{r BasketballTestDecisionTreeNormalize}
+system.time(BasketballTrainTestNM <- predict(BasketballTrainFitNM, newdata = BasketballTestNM))
+confusionMatrix(BasketballTrainTestNM, BasketballTestNM$RESULT)
+```
+
+#
+#
+#
+### IMPORTANCE DATAFRAME ###
+#
+#
+#
+
+```{R ImportanceDataframe}
+BasketballIMP <- cbind(as.data.frame(BasketballNormalize$WON_LOST_PER_VALUE),
+                       as.data.frame(BasketballNormalize$WON_LOST_PER_RANK),
+                       as.data.frame(BasketballNormalize$OPP_WON_LOST_PER_VALUE),
+                       as.data.frame(BasketballNormalize$OPP_WON_LOST_PER_RANK),
+                       as.data.frame(BasketballNormalize$SCORING_MARGIN_VALUE),
+                       as.data.frame(BasketballNormalize$OPP_SCORING_MARGIN_VALUE),
+                       as.data.frame(BasketballNormalize$SCORING_MARGIN_RANK),
+                       as.data.frame(BasketballNormalize$HOME_OR_AWAY),
+                       as.data.frame(BasketballNormalize$FIELD_GOAL_PER_VALUE),
+                       as.data.frame(BasketballNormalize$FIELD_GOAL_PER_RANK),
+                       as.data.frame(BasketballNormalize$OPP_SCORING_MARGIN_RANK),
+                       as.data.frame(BasketballNormalize$THREE_PT_FIELD_GOALS_PER_RANK),
+                       as.data.frame(BasketballNormalize$SCORING_OFFENSE_RANK),
+                       as.data.frame(BasketballNormalize$FIELD_GOAL_PER_DEFENSE_RANK),
+                       as.data.frame(BasketballNormalize$OPP_GAMES_PLAYED_05),
+                       as.data.frame(BasketballNormalize$THREE_PT_FIELD_GOALS_PER_VALUE),
+                       as.data.frame(BasketballNormalize$RESULT))
+colnames(BasketballIMP) <- c("WON_LOST_PER_VALUE", 
+                             "WON_LOST_PER_RANK", 
+                             "OPP_WON_LOST_PER_VALUE", 
+                             "OPP_WON_LOST_PER_RANK",
+                             "SCORING_MARGIN_VALUE",
+                             "OPP_SCORING_MARGIN_VALUE",
+                             "SCORING_MARGIN_RANK",
+                             "HOME_OR_AWAY",
+                             "FIELD_GOAL_PER_VALUE",                         
+                             "FIELD_GOAL_PER_RANK",
+                             "OPP_SCORING_MARGIN_RANK",
+                             "THREE_PT_FIELD_GOALS_PER_RANK",
+                             "SCORING_OFFENSE_RANK",
+                             "FIELD_GOAL_PER_DEFENSE_RANK",
+                             "OPP_GAMES_PLAYED_05",
+                             "THREE_PT_FIELD_GOALS_PER_VALUE",
+                             "RESULT")
+str(BasketballIMP)
+nrow(BasketballIMP)
+anyNA(BasketballIMP)
+head(BasketballIMP$RESULT)
+```
+
+## Find Highly Correlated Data
+```{r FindHighlyCorrelatedData}
+set.seed(4567)
+BasketballCorrelationMatrix <- cor(BasketballIMP[1:16])
+print(BasketballCorrelationMatrix)
+BasketballHighlyCorrelated <- findCorrelation(BasketballCorrelationMatrix, cutoff = 0.65)
+print(BasketballHighlyCorrelated)
+```
+
+## Basketball Correlation Matrix Plot
+```{r BasketballCorrelationMatrixPlot}
+corrplot(BasketballCorrelationMatrix, type="upper", order="hclust", tl.col = "black", tl.srt = 45)
+```
+
+## References
+
+## Lantz, B. (2015). Machine Learning with R. Birmingham, UK: Packt.
+
+## Saxena, R. (2017). Decision Tree Classifier Implementation in R, Retrieved 12:00, June 2, 2019, from http://dataaspirant.com/2017/02/03/decision-tree-classifier-implementation-in-r/ 
+
+## Brownlee, J., R. (2014). Feature Selection with the Caret R Package, Retrieved 12:30, June 2, 2019, from https://machinelearningmastery.com/feature-selection-with-the-caret-r-package/
+
+## Brownlee, J., R. (2016). Tune Machine Learning Algorithms in R (Random Forest Case Study), Retrieved 13:00, June 2, 2019, from https://machinelearningmastery.com/tune-machine-learning-algorithms-in-r/
+
+## Big Computing. (2018). Big Computing, Retrieved 13:30, June 2, 2019, from http://bigcomputing.blogspot.com/2014/10/an-example-of-using-random-forest-in.html
+
+## Guru99. (2018). R Random Forest Tutorial with Example, Retrieved 14:00, June 2, 2019, from https://www.guru99.com/r-random-forest-tutorial.html
+
+## Tahsildar, S. (2019). Gini Index for Decision Trees, Retrieved 14:30, June 2, 2019, from https://blog.quantinsti.com/gini-index/
+
+## RDocumentation. (2019). svm, Retrieved 20:00, June 3, 2019, from https://www.rdocumentation.org/packages/e1071/versions/1.7-1/topics/svm
+
+## RDocumentation. (2019). neuralnet, Retrieved 20:00, June 3, 2019, from https://www.rdocumentation.org/packages/neuralnet/versions/1.44.2/topics/neuralnet
+
