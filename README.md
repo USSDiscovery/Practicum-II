@@ -99,6 +99,8 @@ headerResults = 'year_id' + delimiter +\
 
 #### Player Statistics
 
+![alt tag](Images/Player-Statistics.png "Player Statistics")
+
 As the Python code iterates through teams, each team's player statistics are recorded to a file. The following is the Team Player Statistic's file header as extracted from code:
 
 headerPlayerStatisticsPivot = 'year_id' + delimiter +\
@@ -289,11 +291,39 @@ A new variable importance yields the following top 20 most important variables. 
 
 ## Data Modeling - Random Forest
 
-Next, a Random Forest model is built, based on the 20 most important attributes outlined above. The purpose of Random Forest is to randomly select different attributes on which to split. These individual trees are then combined to form one 'majority' answer.
+Next, a Random Forest model is built, based on the 16 most important attributes outlined above. The purpose of Random Forest is to randomly select different attributes on which to split and to also randomly select the data points to consider. This technique is know as bagging. A voting then takes place amongst individual trees to form one 'majority' answer.
+
+The following is the call to Random Forest. Note, the dataset used is the initial variable importance, 16 predictors. This dataset included the negatively correlated Rank attributes.
+
+![alt tag](Images/Random-Forest-Call.png "Random Forest Call")
+
+The following is the Random Forest 'plot' which compares Bootstrap Accuracy to the number of randomly selected predictors. This graph shows a negative slope where approximately 2 predictors yields the highest accuracy.
+
+![alt tag](Images/Random-Forest-Plot.png "Random Forest Plot")
+
+![alt tag](Images/Random-Forest-Confusion-Matrix.png "Random Forest Confusion Matrix")
+
+1. Accuracy = 0.7429
+2. Kappa = 0.4858
+3. Sensitivity = 0.7462
+4. Specificity = 0.7395
 
 ## Data Modeling - K Nearest Neighbors
 
-KNN is a way of measuring the distance between an unlabeled object and labeled objects using a distance formula such as the Euclidean Distance. The majority vote of the closest K objects that are labeled to an unlabeled object wins. For example, if out of the 10 closest labeled objects to an unlabeled object, 7 are wins and 3 are losses, the unlabeled object will be labeled as a win. Note, in the case of this dataset, the winning team's statistics and the losing team's statistics are all represented on the same record. The win or loss label is with respect to the 'team' on the record, not the 'opposing team' on the record.
+KNN is a way of measuring the distance between an unlabeled object and labeled objects using a distance formula such as the Euclidean Distance. The majority vote of the closest K objects that are labeled to an unlabeled object wins. For example, if out of the 10 closest labeled objects to an unlabeled object, 7 are wins and 3 are losses, the unlabeled object will be labeled as a win. Using normalized data is especially important with KNN as an unbalanced dataset can adversely affect the distance calculation. Note, in the case of this dataset, the winning team's statistics and the losing team's statistics are all represented on the same record. The win or loss label is with respect to the 'team' on the record, not the 'opposing team' on the record.
+
+Choosing a K value is an important step. Choosing k = sqrt(n) is a generally followed guideline. With n = 20, the sqrt(n) is approximately 4.4. The following illustrates looping through k from 1 to 200. Ultimately, k = 200 is used.
+
+![alt tag](Images/KNN-1-10.png "KNN for K 1 to 10")
+
+![alt tag](Images/KNN-190-200.png "KNN for K 190 to 200")
+
+![alt tag](Images/KNN-200-Confusion-Matrix.png "KNN for K 200 Confusion Matrix")
+
+1. Accuracy = 0.7600
+2. Kappa = 0.5199
+3. Sensitivity = 0.7642
+4. Specificity = 0.7557
 
 ## Support Vector Machines
 
@@ -308,7 +338,7 @@ Support Vector Machines attempt to separate data points using n-dimensional spac
 
 ## Artificial Neural Networks
 
-Artificial Neural Networks determine how much an attribute or combination of attributes contribute to a class. ANNs are resource intensive. The 20 most important attributes were used. This limited dataset may have contributed to the lack of accuracy of this model. With 20 attributes and a 223,141 record training dataset, the model took approximately 6.7 hours to build. It would be interesting to see if adding additional attributes will increase the accuracy of this model.
+Artificial Neural Networks determine how much an attribute or combination of attributes contribute to a class. ANNs are resource intensive. The 16 most important attributes were used. This limited dataset may have contributed to the lack of accuracy of this model. With 20 attributes and a 223,141 record training dataset, the model took approximately 6.7 hours to build. It would be interesting to see if adding additional attributes will increase the accuracy of this model.
 
 ![alt tag](Images/ANN-1-Hidden-Layer.png "Artificial Neural Network with One Hidden Layer")
 
@@ -340,10 +370,12 @@ Artificial Neural Networks determine how much an attribute or combination of att
 
 #### RDocumentation. (2019). neuralnet, Retrieved 20:00, June 3, 2019, from https://www.rdocumentation.org/packages/neuralnet/versions/1.44.2/topics/neuralnet
 
-#### Black, P. (2019) Manhattan Distance. Retrieved 20:00, May 15, 2019 from  https://www.nist.gov/dads/HTML/manhattanDistance.html
+#### Black, P. (2019). Manhattan Distance. Retrieved 20:00, May 15, 2019 from  https://www.nist.gov/dads/HTML/manhattanDistance.html
 
 #### Sehra, C. (2018). Decision Trees Explained Easily. Retrieved 12:00, May 30, 2019 from https://medium.com/@chiragsehra42/decision-trees-explained-easily-28f23241248
 
-#### Sam, T. (2018) Entropy: How Decision Trees Make Decisions.  Retrieved 09:00, May 30, 2019 from  https://towardsdatascience.com/entropy-how-decision-trees-make-decisions-2946b9c18c8
+#### Sam, T. (2018). Entropy: How Decision Trees Make Decisions.  Retrieved 09:00, May 30, 2019 from  https://towardsdatascience.com/entropy-how-decision-trees-make-decisions-2946b9c18c8
 
 #### Eight to Late. (2019). A Gentle Introduction to Support Vector Machines Using R. Retrieved 12:00, June 5, 2019 from https://eight2late.wordpress.com/2017/02/07/a-gentle-introduction-to-support-vector-machines-using-r/
+
+#### Koehrsen, W. (2018). An Implementation and Explanation of the Random Forest in Python. Retrieved 10:00, August 21, 2019 from https://towardsdatascience.com/an-implementation-and-explanation-of-the-random-forest-in-python-77bf308a9b76
